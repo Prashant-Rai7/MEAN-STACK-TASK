@@ -1,45 +1,52 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {  FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ApiService } from '../Service/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.css'],
 })
-export class SignupComponent implements OnInit{
-  myForm: any;
-  name: string = '';
-  email: string= '';
-  password: string= '';
-  constructor(private api : ApiService, private fb : FormBuilder){ }
+export class SignupComponent implements OnInit {
+  myForm!: FormGroup;
 
-  persondata!: [
-    { name: 'Prashant Rai'; email: 'prashant@gmail.com'; password: 'sdkadhdif'; }
-  ];
+  constructor(private formbuilder: FormBuilder,private _api: ApiService,private _router : Router) {}
 
-ngOnInit(): void {
- this.myForm = this.fb.group({
-    name:[''],
-    email:[''],
-    password:['']
-  })
-}
 
-submitForm() {
-  // alert("its working")
-  const newPerson = { name: this.persondata[0].name, email: this.email, password: this.password, };
 
-//   this.persondata.push({
-//     name: this.name,
-//     email: this.email,
-//     password: this.password
-//   })
-//   // Reset the form values
-//   this.name = '';
-//   this.email = '';
-//   this.password = '';
-}
+  ngOnInit(): void {
+    this.myForm = this.formbuilder.group({
+      adminName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
+
+  // personDataArray: any[] = [{ name: 'Prashant Rai', email: 'prashant@gmail.com', password: 'sdkadhdif' }];
+
+
+
+  submitForm() {
+    // console.log(this.myForm)
+    if (this.myForm.valid) {
+      const personData = this.myForm.value;
+      // console.log(personData);
+      // this.personDataArray.push(personData);
+
+      this._api.registerUser(personData).subscribe((res) => {
+        alert('Registration Successful');
+        // console.log("This is response from database.........",res)
+        // this._api.personDataArray.push(res);
+        this.myForm.reset();
+        this._router.navigate(['/login'])
+      })
+
+    }
+    else{
+      alert('All Value Valid Required');
+    }
+  }
 
 
 }
