@@ -14,8 +14,8 @@ export class AdminComponent implements OnInit {
     personDataArray: any
     ngOnInit(): void {
       this._api.getUser().subscribe({
-        next:(users)=>{
-          this.personDataArray= users
+        next:(users:any)=>{
+          this.personDataArray= users.data
         },
         error:(err)=>{
           alert(err)

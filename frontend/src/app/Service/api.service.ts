@@ -23,4 +23,9 @@ export class ApiService {
   getUser(){
     return this.http.get(this.getUserAPI)
    }
+
+  loginUser(loginData: any){
+    console.log(loginData);
+   return this.http.post<any>(this.loginAPI , loginData)
+  }
 }
