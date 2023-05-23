@@ -45,4 +45,8 @@ export class LoginComponent implements OnInit {
       alert('All fields are required');
     }
   }
+
+  rediredTo(){
+    const routerLink="/home"
+  }
 }
